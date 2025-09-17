@@ -16,9 +16,10 @@ bld/
 [Ll]og/
 
 # Visual Studio files
-.vs/
-vs/
-vscode/
+.vs
+vs
+vscode
+obj
 *.vc.db
 *.VC.opendb
 

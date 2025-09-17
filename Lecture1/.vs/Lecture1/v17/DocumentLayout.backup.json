@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\adam.svoboda\\source\\repos\\Lecture1\\",
+  "WorkspaceRootPath": "U:\\Documents\\gymspit-pg3-2025\\Lecture1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FA696B94-48AA-44BD-A225-339999AAA2FD}|Lecture1\\Lecture1.csproj|c:\\users\\adam.svoboda\\source\\repos\\lecture1\\lecture1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FA696B94-48AA-44BD-A225-339999AAA2FD}|Lecture1\\Lecture1.csproj|u:\\documents\\gymspit-pg3-2025\\lecture1\\lecture1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FA696B94-48AA-44BD-A225-339999AAA2FD}|Lecture1\\Lecture1.csproj|solutionrelative:lecture1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\adam.svoboda\\source\\repos\\Lecture1\\Lecture1\\Program.cs",
+              "DocumentMoniker": "U:\\Documents\\gymspit-pg3-2025\\Lecture1\\Lecture1\\Program.cs",
               "RelativeDocumentMoniker": "Lecture1\\Program.cs",
-              "ToolTip": "C:\\Users\\adam.svoboda\\source\\repos\\Lecture1\\Lecture1\\Program.cs",
+              "ToolTip": "U:\\Documents\\gymspit-pg3-2025\\Lecture1\\Lecture1\\Program.cs",
               "RelativeToolTip": "Lecture1\\Program.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAQwB4AAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAACkAAAAAAAAAAAA2wFAAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-10T06:13:45.676Z",
               "EditorCaption": ""

@@ -2,9 +2,6 @@
 
 int defaultDelay = 1000;
 
-
-
-
 void FancyWrite(string msg, bool newLine = true)
 {
     Console.CursorVisible = false;
@@ -12,7 +9,6 @@ void FancyWrite(string msg, bool newLine = true)
     char[] temp = new char[letters.Length];
 
     int x, y;
-
     (x, y) = Console.GetCursorPosition();
 
     for (int i = 0; i < letters.Length; i++) 
