@@ -16,6 +16,7 @@ bld/
 [Ll]og/
 
 # Visual Studio files
+.vs/
 vs/
 vscode/
 *.vc.db
