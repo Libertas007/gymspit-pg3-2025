@@ -1,41 +1,90 @@
-﻿Console.WriteLine("== Kalkulačka ==");
+﻿Console.WriteLine("== Zvolte program ==");
+Console.WriteLine("1 - Kalkulačka\n2 - FizzBuzz\n");
 
-double a = 0, b = 0;
-
-int x, y;
-(x, y) = Console.GetCursorPosition();
-
-while (true)
-{
-    Console.WriteLine($"a = {a} (změna šipkami nahoru a dolů, potvrď Enterem)");
-
-    var key = Console.ReadKey().Key;
-
-    if (key == ConsoleKey.Enter) break;
-
-    if (key == ConsoleKey.UpArrow) a++;
-    if (key == ConsoleKey.DownArrow) a--;
-    Console.SetCursorPosition(x, y);
-}
-
-
-(x, y) = Console.GetCursorPosition();
-
-while (true)
-{
-    Console.WriteLine($"b = {b} (změna šipkami nahoru a dolů, potvrď Enterem)");
-
-    var key = Console.ReadKey().Key;
-
-    if (key == ConsoleKey.Enter) break;
-
-    if (key == ConsoleKey.UpArrow) b++;
-    if (key == ConsoleKey.DownArrow) b--;
-    Console.SetCursorPosition(x, y);
-}
-
+ConsoleKeyInfo key = Console.ReadKey();
 Console.WriteLine();
-Console.WriteLine($"a + b = {a + b}");
-Console.WriteLine($"a - b = {a - b}");
-Console.WriteLine($"a * b = {a * b}");
-Console.WriteLine($"a / b = {a / b}");
+
+switch (key.KeyChar)
+{
+    case '1':
+        calculator();
+        break;
+    case '2':
+        fizzBuzz();
+        break;
+}
+
+void fizzBuzz()
+{
+    Console.WriteLine("== FizzBuzz ==");
+
+    int num = 0;
+    while (true)
+    {
+        string message = "";
+
+        if (num % 3 == 0)
+        {
+            message += "Fizz";
+        }
+        
+        if (num % 5 == 0) 
+        {
+            message += "Buzz";
+        }
+
+        if (message == "")
+        {
+            message = num.ToString();
+        }
+        
+        Console.WriteLine(message);
+        num++;
+        Thread.Sleep(50);
+    }
+}
+
+void calculator()
+{
+    Console.WriteLine("== Kalkulačka ==");
+
+    double a = 0, b = 0;
+
+    int x, y;
+    (x, y) = Console.GetCursorPosition();
+
+    while (true)
+    {
+        Console.WriteLine($"a = {a} (změna šipkami nahoru a dolů, potvrď Enterem)");
+
+        var key = Console.ReadKey().Key;
+
+        if (key == ConsoleKey.Enter) break;
+
+        if (key == ConsoleKey.UpArrow) a++;
+        if (key == ConsoleKey.DownArrow) a--;
+        Console.SetCursorPosition(x, y);
+    }
+
+
+    (x, y) = Console.GetCursorPosition();
+
+    while (true)
+    {
+        Console.WriteLine($"b = {b} (změna šipkami nahoru a dolů, potvrď Enterem)");
+
+        var key = Console.ReadKey().Key;
+
+        if (key == ConsoleKey.Enter) break;
+
+        if (key == ConsoleKey.UpArrow) b++;
+        if (key == ConsoleKey.DownArrow) b--;
+        Console.SetCursorPosition(x, y);
+    }
+
+    Console.WriteLine();
+    Console.WriteLine($"a + b = {a + b}");
+    Console.WriteLine($"a - b = {a - b}");
+    Console.WriteLine($"a * b = {a * b}");
+    Console.WriteLine($"a / b = {a / b}");
+}
