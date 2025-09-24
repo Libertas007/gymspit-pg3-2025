@@ -19,27 +19,41 @@ void fizzBuzz()
     Console.WriteLine("== FizzBuzz ==");
 
     int num = 0;
+
     while (true)
+    {
+        Console.Write("Zadejte počet iterací: ");
+
+        string val = Console.ReadLine() ?? string.Empty;
+        if (int.TryParse(val, out int parsedNum))
+        {
+            num = parsedNum;
+            break;
+        }
+
+        Console.WriteLine("Číslo je neplatné.");
+    }
+
+    for (int i = 0; i <= num; i++)
     {
         string message = "";
 
-        if (num % 3 == 0)
+        if (i % 3 == 0)
         {
-            message += "Fizz";
+            message += "Fizz ";
         }
         
-        if (num % 5 == 0) 
+        if (i % 5 == 0) 
         {
             message += "Buzz";
         }
 
         if (message == "")
         {
-            message = num.ToString();
+            message = i.ToString();
         }
         
         Console.WriteLine(message);
-        num++;
     }
 }
 
