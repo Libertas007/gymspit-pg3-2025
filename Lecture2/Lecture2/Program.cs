@@ -40,7 +40,6 @@ void fizzBuzz()
         
         Console.WriteLine(message);
         num++;
-        Thread.Sleep(50);
     }
 }
 

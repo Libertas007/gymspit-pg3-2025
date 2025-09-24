@@ -1,0 +1,26 @@
+// Boat dostupný zde: https://github.com/Libertas007/BoatLang
+
+LOAD MATH;
+
+SAIL ON YACHT;
+
+REQUEST BARREL NUM;
+
+LOOP IF 1 == 1:
+	REQUEST PACKAGE MESSAGE;
+	
+	IF (MATH.MODULO NUM 3) == 0:
+		ADD "FIZZ" TO MESSAGE;
+	END;
+
+	IF (MATH.MODULO NUM 5) == 0:
+		ADD "BUZZ" TO MESSAGE;
+	END;
+
+	IF MESSAGE == "":
+		SET MESSAGE TO (NUM.DECIMAL);
+	END;
+	
+	BROADCAST MESSAGE;
+	ADD 1 TO NUM;
+END;
