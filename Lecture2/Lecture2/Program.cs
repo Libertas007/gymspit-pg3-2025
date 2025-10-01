@@ -1,4 +1,6 @@
-﻿Console.WriteLine("== Zvolte program ==");
+﻿f(1, 100);
+
+Console.WriteLine("== Zvolte program ==");
 Console.WriteLine("1 - Kalkulačka\n2 - FizzBuzz\n");
 
 ConsoleKeyInfo key = Console.ReadKey();
@@ -56,6 +58,9 @@ void fizzBuzz()
         Console.WriteLine(message);
     }
 }
+
+// one-liner FizzBuzz using recursion
+void f(int i,int s){if(i==s)return;if(i%3==0||i%5==0)Console.WriteLine((i%3==0?"Fizz":"")+(i%5==0?"Buzz":""));else Console.WriteLine(i.ToString());f(i+1,s);};
 
 void calculator()
 {
