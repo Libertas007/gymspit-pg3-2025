@@ -1,4 +1,4 @@
-﻿namespace Lecture7
+﻿namespace Lecture6
 {
     class Program
     {
@@ -20,24 +20,40 @@
         int cursorY = 0;
         (int, int) consoleCursorPos;
 
+        int markedMines = 0;
+
         bool gameGenerated = false;
 
         ConsoleColor[] colors = new ConsoleColor[]
         {
-            ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.Yellow, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.White
+            ConsoleColor.DarkGray, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.DarkYellow, ConsoleColor.Cyan, ConsoleColor.DarkMagenta, ConsoleColor.DarkBlue, ConsoleColor.DarkGreen
         };
 
         public Game()
         {
+            Console.WriteLine(@"
+Welcome to Minesweeper!
+
+- use arrows to move the cursor (shown with parenthesis)
+- press Enter to dig the land at cursor position
+- press F to mark a mine
+
+Watch out and don't dig the mine!
+");
+
+            Console.WriteLine($"Mines marked {markedMines} / {mineCount}");
+            consoleCursorPos = Console.GetCursorPosition();
+
+            Console.CursorVisible = false;
+
             for (int i = 0; i < gameSize; i++)
             {
                 for (int j = 0; j < gameSize; j++)
                 {
                     game[i, j] = 0;
-                    visible[i, j] = 0;
+                    SetVisible(i, j, 0);
                 }
             }
-            consoleCursorPos = Console.GetCursorPosition();
             GameLoop();
         }
 
@@ -45,49 +61,58 @@
         {
             while (true)
             {
-                PrintGame();
                 HandleKeystroke();
             }
         }
 
-        public void PrintGame()
+        public void SetVisible(int x, int y, int val)
         {
-            Console.SetCursorPosition(consoleCursorPos.Item1, consoleCursorPos.Item2);
+            visible[x, y] = val;
 
-            for (int i = 0; i < gameSize; i++)
+            if (val != 1)
             {
-                for (int j = 0; j < gameSize; j++)
-                {
-                    if (cursorX == i && cursorY == j)
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
+                Console.SetCursorPosition(consoleCursorPos.Item1, consoleCursorPos.Item2 - 1);
 
-                    if (game[i, j] == -1 && visible[i, j] == 1)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                        Console.ForegroundColor = ConsoleColor.White;
-
-                        Console.Write("[ B ]");
-                    } else if (visible[i, j] == 1)
-                    {
-                        Console.ForegroundColor = colors[game[i, j]];
-                        Console.Write($"( {game[i, j]} )");
-                    }
-                    else if (visible[i, j] == 2)
-                    {
-                        Console.Write("[ F ]");
-                    }
-                    else
-                    {
-                        Console.Write("[ - ]");
-                    }
-
-                    Console.ResetColor();
-                }
-                Console.WriteLine();
+                Console.WriteLine($"Mines marked {markedMines} / {mineCount}");
             }
+
+            bool isCursorHere = cursorX == x && cursorY == y;
+
+            Console.SetCursorPosition((consoleCursorPos.Item1 + y) * 5, consoleCursorPos.Item2 + x);
+
+            if (game[x, y] == -1 && visible[x, y] == 1)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.ForegroundColor = ConsoleColor.White;
+
+                Console.Write("[ B ]");
+            }
+            else if (visible[x, y] == 1)
+            {
+                Console.BackgroundColor = colors[game[x, y]];
+                Console.ForegroundColor = ConsoleColor.White;
+
+                if (game[x, y] == 0)
+                {
+                    Console.Write($"{(isCursorHere ? '(' : ' ')}   {(isCursorHere ? ')' : ' ')}");
+                } else
+                {
+                    Console.Write($"{(isCursorHere ? '(' : ' ')} {game[x, y]} {(isCursorHere ? ')' : ' ')}");
+                }
+            }
+            else if (visible[x, y] == 2)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Magenta;
+                Console.Write($"{(isCursorHere ? '(' : ' ')} F {(isCursorHere ? ')' : ' ')}");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write($"{(isCursorHere ? '(' : ' ')} - {(isCursorHere ? ')' : ' ')}");
+            }
+
+            Console.ResetColor();
         }
 
         public void InitialiseGame(int preventX, int preventY)
@@ -157,7 +182,7 @@
 
             if (game[x, y] != -1)
             {
-                visible[x, y] = 1;
+                SetVisible(x, y, 1);
             } else
             {
                 EndGame();
@@ -176,7 +201,25 @@
         {
             if (visible[x, y] == 1) return;
 
-            visible[x, y] = 2;
+            if (visible[x, y] == 2)
+            {
+                SetVisible(x, y, 0);
+            } else
+            {
+                SetVisible(x, y, 2);
+            }
+
+            if (CheckWinCondition())
+            {
+                WinGame();
+            }
+        }
+
+        private void UpdateCursor(int oldX, int oldY)
+        {
+            SetVisible(cursorX, cursorY, visible[cursorX, cursorY]);
+
+            SetVisible(oldX, oldY, visible[oldX, oldY]);
         }
 
         public void EndGame()
@@ -185,31 +228,95 @@
             {
                 for (int j = 0; j < gameSize; j++)
                 {
-                    visible[i, j] = 1;
+                    SetVisible(i, j, 1);
                 }
             }
-            PrintGame();
-            Console.WriteLine("You lost");
+            Console.WriteLine("\n\nOh no! You have lost!");
+
+            Console.WriteLine("Press Esc to exit");
+
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+                continue;
+            }
             Environment.Exit(0);
+        }
+
+        public void WinGame()
+        {
+            for (int i = 0; i < gameSize; i++)
+            {
+                for (int j = 0; j < gameSize; j++)
+                {
+                    if (visible[i, j] != 2)
+                    {
+                        SetVisible(i, j, 1);
+                    }
+                }
+            }
+
+            Console.WriteLine("\n\nCongratulations, you have won the game!");
+            Console.WriteLine("Press Esc to exit");
+
+            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            {
+                continue;
+            }
+            Environment.Exit(0);
+        }
+
+        private bool CheckWinCondition()
+        {
+            if (!gameGenerated)
+            {
+                return false;
+            }
+
+            int minesChecked = 0;
+            int minesFlagged = 0;
+ 
+            for (int i = 0; i < gameSize; i++)
+            {
+                for (int j = 0; j < gameSize; j++)
+                {
+                    if (visible[i, j] == 2) {
+                        minesFlagged++;
+
+                        if (game[i, j] != -1)
+                        {
+                            continue;
+                        }
+
+                        minesChecked++;
+                    }
+                }
+            }
+
+            markedMines = minesFlagged;
+
+            return minesChecked == mineCount;
         }
 
         public void HandleKeystroke()
         {
-            var key = Console.ReadKey(false);
+            var key = Console.ReadKey(true);
+
+            int oldX = cursorX;
+            int oldY = cursorY;
 
             switch (key.Key)
             {
                 case ConsoleKey.DownArrow:
-                    cursorX = Math.Clamp(cursorX + 1, 0, gameSize);
+                    cursorX = Math.Clamp(cursorX + 1, 0, gameSize - 1);
                     break; 
                 case ConsoleKey.UpArrow:
-                    cursorX = Math.Clamp(cursorX - 1, 0, gameSize);
+                    cursorX = Math.Clamp(cursorX - 1, 0, gameSize - 1);
                     break;
                 case ConsoleKey.LeftArrow:
-                    cursorY = Math.Clamp(cursorY - 1, 0, gameSize);
+                    cursorY = Math.Clamp(cursorY - 1, 0, gameSize - 1);
                     break;
                 case ConsoleKey.RightArrow:
-                    cursorY = Math.Clamp(cursorY + 1, 0, gameSize);
+                    cursorY = Math.Clamp(cursorY + 1, 0, gameSize - 1);
                     break;
                 case ConsoleKey.Enter:
                     UncoverMine(cursorX, cursorY);
@@ -221,6 +328,8 @@
                     FlagMine(cursorX, cursorY);
                     break;
             }
+
+            UpdateCursor(oldX, oldY);
         }
     }
 }
