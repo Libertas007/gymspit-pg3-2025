@@ -1,30 +1,29 @@
-﻿using System.Net;
-
-namespace TreeSort
+﻿namespace TreeSort
 {
     class Program
     {
         public static void Main(string[] args)
         {
-            TreeSort sort = new TreeSort([11, 25, 3, 84, 65]);
+            TreeSort<int> sort = new TreeSort<int>([-222, 845, 9874, -1111111111, 0]);
 
-            Console.WriteLine(sort.Get());
+            Console.WriteLine(string.Join(", ", sort.Get()));
         }
     }
 
-    class TreeSort
+    class TreeSort<T> where T: IComparable<T>, new()
     {
-        private int[] numbers;
+        private T[] numbers;
         private Node[] nodes;
+        private List<T> list = new List<T>();
 
-        public TreeSort(int[] numbers)
+        public TreeSort(T[] numbers)
         {
             this.numbers = numbers;
             nodes = new Node[numbers.Length];
 
             for (int i = 0; i < nodes.Length; i++)
             {
-                nodes[i] = new Node(-1);
+                nodes[i] = new Node(new T());
             }
 
 
@@ -32,38 +31,35 @@ namespace TreeSort
             {
                 ProcessNumber(index);
             }
-
-            for (int index = 0; index < nodes.Length; index++)
-            {
-                Console.WriteLine(nodes[index].ToString());
-            }
         }
 
-        public int[] Get()
+        public T[] Get()
         {
             return TraverseTree();
         }
 
         private void ProcessNumber(int index)
         {
-            int num = numbers[index];
+            T num = numbers[index];
 
-            InsertNumber(0, -1, num);
+            InsertNumber(0, -1, num, index);
         }
 
-        private void InsertNumber(int index, int parent, int num)
+        private void InsertNumber(int index, int parent, T num, int numIndex)
         {
-            Node node = nodes[index];
+            if (index == -1)
+            {
+                index = numIndex;
+            }
 
-            Console.WriteLine($"{index}, {parent}, {num}");
-            Console.WriteLine(node.ToString());
+            Node node = nodes[index];
 
             if (!node.Occupied)
             {
                 if (parent != -1)
                 {
                     Node parentNode = nodes[parent];
-                    if (parentNode.Value < num)
+                    if (num.CompareTo(parentNode.Value) == -1)
                     {
                         parentNode.Lower = index;
                     } else
@@ -77,58 +73,57 @@ namespace TreeSort
                 }
 
                 node.Occupied = true;
-                node.Value = num;
+                node.Value = num; 
                 nodes[index] = node;
                 return;
             }
 
-            if (num < node.Value)
+            if (num.CompareTo(node.Value) == -1)
             {
-                InsertNumber(node.Lower, index, num);
+                InsertNumber(node.Lower, index, num, numIndex);
             } else
             {
-                InsertNumber(node.Higher, index, num);
+                InsertNumber(node.Higher, index, num, numIndex);
             }
         }
 
-        private int[] TraverseTree()
+        private T[] TraverseTree()
         {
-            List<int> list = new List<int>();
-
-            VisitNode(list, 0);
+            list.Clear();
+            VisitNode(0);
 
             return list.ToArray();
         }
 
-        private void VisitNode(List<int> list, int index)
+        private void VisitNode(int index)
         {
             Node node = nodes[index];
 
             if (node.Occupied)
             {
-                if (node.Lower > -1)
+                if (node.Lower != -1)
                 {
-                    VisitNode(list, node.Lower);
+                    VisitNode(node.Lower);
                 }
 
                 list.Add(node.Value);
 
-                if (node.Higher > -1)
+                if (node.Higher != -1)
                 {
-                    VisitNode(list, node.Higher);
+                    VisitNode(node.Higher);
                 }
             }
         }
 
         struct Node
         {
-            public int Value;
+            public T Value;
             public int Lower = -1;
             public int Higher = -1;
             public int Parent = -1;
             public bool Occupied = false;
 
-            public Node(int value) { Value = value; }
+            public Node(T value) { Value = value; }
 
             override public String ToString()
             {
