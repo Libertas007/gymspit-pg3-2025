@@ -38,6 +38,9 @@
                 case "lookup":
                     LookupStudent();
                     break;
+                case "count":
+                    CountStudents();
+                    break;
                 case "delete":
                     DeleteStudent();
                     break;
@@ -46,6 +49,9 @@
                     break;
                 case "exit":
                     Environment.Exit(0);
+                    break;
+                case "size":
+                    Console.WriteLine("< 128");
                     break;
                 default:
                     Console.WriteLine("< Invalid command");
