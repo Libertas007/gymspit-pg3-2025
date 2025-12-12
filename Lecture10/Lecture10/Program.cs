@@ -70,7 +70,7 @@ namespace Lecture10
 
         private bool RemoveWhere<T>(ref T?[] array, Predicate<T?> predicate) where T : class
         {
-            int index = Array.FindIndex(array, predicate);
+            int index = IndexOf(ref array, predicate);
 
             return RemoveValue(ref array, index);
         }
@@ -78,6 +78,11 @@ namespace Lecture10
         private bool Exists<T>(ref T?[] array, Func<T?, bool> predicate) where T : WithId
         {
             return array.Any(predicate);
+        }
+
+        private int IndexOf<T>(ref T?[] array, Predicate<T?> predicate) where T : class
+        {
+            return Array.FindIndex(array, predicate);
         }
 
         public void AddUser(string username)
@@ -174,10 +179,10 @@ namespace Lecture10
 
 
         // Bonus
-        public WithId?[] GetUserTimeline(string user)
+        public Post?[] GetUserTimeline(string user)
         {
             // TODO
-            return new WithId[] { };
+            return new Post[] { };
         }
 
         public Post?[] GetRecentPosts(int number)
