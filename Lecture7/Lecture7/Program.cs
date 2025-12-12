@@ -38,6 +38,18 @@
                 case "lookup":
                     LookupStudent();
                     break;
+                case "delete":
+                    DeleteStudent();
+                    break;
+                case "help":
+                    PrintHelp();
+                    break;
+                case "exit":
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("< Invalid command");
+                    break;
             }
         }
 
@@ -46,10 +58,15 @@
             Console.Write("| Enter student name: ");
             string name = Console.ReadLine() ?? "";
 
-            Console.Write("| Enter student id: ");
+            Console.Write("| Enter student id (empty for next available): ");
             string idS = Console.ReadLine() ?? "";
 
-            if (!int.TryParse(idS, out var id)) {
+            int id;
+
+            if (string.IsNullOrEmpty(idS))
+            {
+                id = Array.FindIndex(students, string.IsNullOrEmpty);
+            } else if (!int.TryParse(idS, out id)) {
                 Console.WriteLine("< Invalid number");
                 return;
             }
@@ -81,7 +98,40 @@
             Console.Write("| Enter student name: ");
             string name = Console.ReadLine() ?? "";
 
-            Console.WriteLine($"< {students.Contains(name)}");
+            // Returning the index of the student because it's more practical
+            Console.WriteLine($"< {Array.IndexOf(students, name)}");
+        }
+
+        public static void DeleteStudent()
+        {
+            Console.Write("| Enter student id: ");
+            string idS = Console.ReadLine() ?? "";
+
+            if (!int.TryParse(idS, out var id)) {
+                Console.WriteLine("< Invalid number");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(students[id]))
+            {
+                Console.WriteLine("< Record does not exist");
+                return;
+            }
+
+            students[id] = null;
+            Console.WriteLine($"< '{id}' removed");
+        }
+
+        public static void PrintHelp()
+        {
+            Console.WriteLine(@"
+- add: Add a new student
+- delete: Delete a student
+- exit: Exit
+- help: Display help
+- list: List students
+- lookup: Lookup a student
+");
         }
     }
 }
