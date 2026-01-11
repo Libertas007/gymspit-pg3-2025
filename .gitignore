@@ -58,3 +58,5 @@ typings/
 *.pfx
 *.publishsettings
 orleans.codegen.cs
+
+.idea/
