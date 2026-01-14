@@ -15,6 +15,11 @@ public class Wallet
     {
         this.data = data;
         this.path = path;
+        
+        if (data.Count == 0)
+        {
+            cursorIndex = -9;
+        }
     }
 
     public static Wallet LoadCSV(string path, string columnSeparator = ";", string rowSeparator = "\n")
@@ -174,7 +179,7 @@ public class Wallet
         Console.Write("  ");
         PrintHeader("Date", 20, isSelected: cursorIndex == -4);
         Console.Write(" | ");
-        PrintHeader("Amount", 13, isSelected: cursorIndex == -3);
+        PrintHeader("Amount", 18, isSelected: cursorIndex == -3);
         Console.Write(" | ");
         PrintHeader("Comment", 40, isSelected: cursorIndex == -2);
         Console.Write(" | ");
@@ -335,7 +340,7 @@ public class Wallet
         Console.ForegroundColor = ConsoleColor.White;
         
         Console.Write(isSelected ? "> " : "  ");
-        Console.Write("{0,-20} | {1,10:N2} Kč | {2,-40} | {3,-20}", UIHelper.FormatDate(entry.Date), entry.Amount, UIHelper.TextEllipsis(entry.Comment, 40), UIHelper.TextEllipsis(entry.Category, 20));
+        Console.Write("{0,-20} | {1,15:N2} Kč | {2,-40} | {3,-20}", UIHelper.FormatDate(entry.Date), entry.Amount, UIHelper.TextEllipsis(entry.Comment, 40), UIHelper.TextEllipsis(entry.Category, 20));
         Console.WriteLine(isSelected ? " <" : "  ");
         
         Console.ResetColor();
