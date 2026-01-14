@@ -1,0 +1,277 @@
+{% extends "layouts/base.html" %}
+{% from "macros/components.html" import product_card, pagination %}
+
+{% block title %}Products - {{ site.name }}{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .page-header {
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h1 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .filters {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .filters select,
+    .filters input {
+        padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .product-header {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .product-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+    
+    .product-body {
+        padding: 1rem;
+    }
+    
+    .product-body .description {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .product-body .rating {
+        color: #f39c12;
+    }
+    
+    .product-footer {
+        padding: 1rem;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .product-footer .price {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+    
+    .product-tags {
+        padding: 0.5rem 1rem 1rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .tag {
+        background: #e9ecef;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+    
+    .badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+    
+    .badge-success {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .badge-danger {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .badge-warning {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #2980b9;
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    .no-products {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+    }
+    
+    .category-section {
+        margin-bottom: 3rem;
+    }
+    
+    .category-section h2 {
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Our Products</h1>
+    <p>Showing {{ products|length }} products</p>
+</div>
+
+{# Filters #}
+<div class="filters">
+    <label>Filter by:</label>
+    <select id="category-filter">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+        <option value="{{ category }}">{{ category }}</option>
+        {% endfor %}
+    </select>
+    
+    <select id="stock-filter">
+        <option value="">All Stock</option>
+        <option value="in-stock">In Stock</option>
+        <option value="out-of-stock">Out of Stock</option>
+    </select>
+    
+    <select id="sort-filter">
+        <option value="name">Sort by Name</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Rating</option>
+    </select>
+</div>
+
+{# Products grouped by category #}
+{% set grouped_products = products|groupby("category") %}
+
+{% for group in grouped_products %}
+<section class="category-section">
+    <h2>{{ group.grouper }}</h2>
+    
+    <div class="products-grid">
+        {% for product in group.list %}
+        {{ product_card(product, show_details=true) }}
+        {% endfor %}
+    </div>
+</section>
+{% else %}
+<div class="no-products">
+    <h2>No products found</h2>
+    <p>Check back later for new products!</p>
+</div>
+{% endfor %}
+
+{# All products (ungrouped) #}
+<section class="all-products mt-3">
+    <h2>All Products</h2>
+    
+    {% if products %}
+    <div class="products-grid">
+        {% for product in products|sort(attribute='price') %}
+        {{ product_card(product) }}
+        {% endfor %}
+    </div>
+    
+    {# Summary #}
+    <div class="mt-3 text-center">
+        <p>
+            <strong>Total Products:</strong> {{ products|length }} |
+            <strong>In Stock:</strong> {{ products|selectattr("in_stock")|list|length }} |
+            <strong>Total Value:</strong> ${{ "%.2f"|format(products|sum(attribute='price')) }}
+        </p>
+    </div>
+    {% endif %}
+</section>
+
+{# Pagination example #}
+{% set current_page = 1 %}
+{% set items_per_page = settings.items_per_page|default(10) %}
+{% set total_pages = ((products|length) / items_per_page)|round(0, 'ceil')|int %}
+
+{% if total_pages > 1 %}
+<div class="mt-3">
+    {{ pagination(current_page, total_pages) }}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Product filtering logic
+    document.getElementById('category-filter').addEventListener('change', function(e) {
+        console.log('Filter by category:', e.target.value);
+        // Filter logic would go here
+    });
+    
+    document.getElementById('stock-filter').addEventListener('change', function(e) {
+        console.log('Filter by stock:', e.target.value);
+    });
+    
+    document.getElementById('sort-filter').addEventListener('change', function(e) {
+        console.log('Sort by:', e.target.value);
+    });
+</script>
+{% endblock %}

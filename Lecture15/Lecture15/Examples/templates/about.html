@@ -1,0 +1,154 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}About - {{ site.name }}{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .about-hero {
+        text-align: center;
+        padding: 3rem 0;
+    }
+    
+    .about-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .about-content {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .about-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .about-section h2 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+    
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+    
+    .team-member {
+        text-align: center;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .team-member img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #ddd;
+        margin-bottom: 1rem;
+    }
+    
+    .team-member h3 {
+        margin-bottom: 0.5rem;
+    }
+    
+    .team-member .role {
+        color: #666;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <h1>About {{ site.name }}</h1>
+    <p>{{ site.description }}</p>
+</section>
+
+<div class="about-content">
+    <div class="about-section">
+        <h2>Our Mission</h2>
+        <p>
+            We are dedicated to providing the best products and services to our customers.
+            Our team works tirelessly to ensure quality and satisfaction in everything we do.
+        </p>
+        <p class="mt-2">
+            Founded in 2020, we have grown to serve over {{ stats.total_users|default(0) }} happy customers
+            with {{ stats.total_products|default(0) }} premium products.
+        </p>
+    </div>
+    
+    <div class="about-section">
+        <h2>Our Values</h2>
+        <ul>
+            {% set values = ["Customer First", "Quality Products", "Fast Delivery", "Honest Pricing", "Sustainable Practices"] %}
+            {% for value in values %}
+            <li>{{ value }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{# Team section using with block #}
+{% with team_members = [
+    {"name": "John Smith", "role": "CEO & Founder"},
+    {"name": "Jane Doe", "role": "CTO"},
+    {"name": "Mike Johnson", "role": "Head of Design"},
+    {"name": "Sarah Williams", "role": "Customer Success"}
+] %}
+<section class="team mt-3">
+    <h2 class="text-center">Meet Our Team</h2>
+    
+    <div class="team-grid">
+        {% for member in team_members %}
+        <div class="team-member">
+            <img src="/static/images/team/{{ member.name|lower|replace(' ', '-') }}.jpg" 
+                 alt="{{ member.name }}"
+                 onerror="this.style.background='#3498db'">
+            <h3>{{ member.name }}</h3>
+            <p class="role">{{ member.role }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endwith %}
+
+{# Contact info #}
+<section class="contact-info mt-3 text-center">
+    <h2>Get in Touch</h2>
+    <p>Have questions? We'd love to hear from you!</p>
+    <p class="mt-2">
+        <strong>Email:</strong> contact@{{ site.name|lower|replace(' ', '') }}.com<br>
+        <strong>Author:</strong> {{ site.author }}
+    </p>
+</section>
+
+{# Raw block example - keeping Jinja-like syntax for frontend templates #}
+{% raw %}
+<script type="text/x-template" id="vue-template">
+    <!-- This content is not parsed by Jinja -->
+    <div v-if="showMessage">
+        {{ message }}
+    </div>
+    <ul>
+        <li v-for="item in items" :key="item.id">
+            {{ item.name }}
+        </li>
+    </ul>
+</script>
+{% endraw %}
+{% endblock %}

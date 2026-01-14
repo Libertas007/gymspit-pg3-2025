@@ -1,0 +1,89 @@
+{
+  "site": {
+    "name": "My Flask App",
+    "description": "A sample Flask application",
+    "author": "John Doe",
+    "version": "1.0.0"
+  },
+  "navigation": [
+    { "url": "/", "title": "Home", "active": true },
+    { "url": "/about", "title": "About", "active": false },
+    { "url": "/products", "title": "Products", "active": false },
+    { "url": "/contact", "title": "Contact", "active": false }
+  ],
+  "user": {
+    "name": "Alice Smith",
+    "email": "alice@example.com",
+    "role": "admin",
+    "avatar_url": "/static/images/avatar.png",
+    "is_authenticated": true,
+    "permissions": ["read", "write", "delete"]
+  },
+  "page": {
+    "title": "Welcome",
+    "content": "This is the main content of the page.",
+    "meta_description": "Welcome to our Flask application"
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Product One",
+      "description": "Description for product one with <strong>HTML</strong> content",
+      "price": 29.99,
+      "in_stock": true,
+      "category": "Electronics",
+      "tags": ["new", "featured", "sale"],
+      "rating": 4.5
+    },
+    {
+      "id": 2,
+      "name": "Product Two",
+      "description": "Description for product two",
+      "price": 49.99,
+      "in_stock": true,
+      "category": "Electronics",
+      "tags": ["featured"],
+      "rating": 4.0
+    },
+    {
+      "id": 3,
+      "name": "Product Three",
+      "description": "Description for product three",
+      "price": 19.99,
+      "in_stock": false,
+      "category": "Accessories",
+      "tags": ["sale"],
+      "rating": 3.5
+    },
+    {
+      "id": 4,
+      "name": "Product Four",
+      "description": "Premium product with all features",
+      "price": 199.99,
+      "in_stock": true,
+      "category": "Premium",
+      "tags": ["new", "premium"],
+      "rating": 5.0
+    }
+  ],
+  "categories": ["Electronics", "Accessories", "Premium", "Sale"],
+  "stats": {
+    "total_users": 1500,
+    "total_products": 42,
+    "total_orders": 3200,
+    "revenue": 125000.50
+  },
+  "messages": [
+    { "type": "success", "text": "Your profile has been updated!" },
+    { "type": "warning", "text": "Your subscription expires soon." }
+  ],
+  "settings": {
+    "show_sidebar": true,
+    "dark_mode": false,
+    "items_per_page": 10,
+    "currency": "USD",
+    "currency_symbol": "$"
+  },
+  "current_year": 2025,
+  "debug": false
+}

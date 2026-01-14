@@ -1,0 +1,103 @@
+{# Macro for rendering a product card #}
+{% macro product_card(product, show_details=true) %}
+<div class="product-card" data-product-id="{{ product.id }}">
+    <div class="product-header">
+        <h3>{{ product.name }}</h3>
+        {% if not product.in_stock %}
+        <span class="badge badge-danger">Out of Stock</span>
+        {% elif 'new' in product.tags %}
+        <span class="badge badge-success">New</span>
+        {% endif %}
+    </div>
+    
+    {% if show_details %}
+    <div class="product-body">
+        <p class="description">{{ product.description|striptags|truncate(100) }}</p>
+        <div class="rating">
+            {% for i in range(5) %}
+                {% if i < product.rating|int %}
+                ?
+                {% else %}
+                ?
+                {% endif %}
+            {% endfor %}
+            <span>({{ product.rating }})</span>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="product-footer">
+        <span class="price">${{ "%.2f"|format(product.price) }}</span>
+        {% if product.in_stock %}
+        <button class="btn btn-primary">Add to Cart</button>
+        {% else %}
+        <button class="btn btn-secondary" disabled>Unavailable</button>
+        {% endif %}
+    </div>
+    
+    {% if product.tags %}
+    <div class="product-tags">
+        {% for tag in product.tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{# Macro for pagination #}
+{% macro pagination(current_page, total_pages, base_url='/products') %}
+<nav class="pagination">
+    {% if current_page > 1 %}
+    <a href="{{ base_url }}?page={{ current_page - 1 }}" class="page-link">&laquo; Previous</a>
+    {% endif %}
+    
+    {% for page in range(1, total_pages + 1) %}
+        {% if page == current_page %}
+        <span class="page-link active">{{ page }}</span>
+        {% else %}
+        <a href="{{ base_url }}?page={{ page }}" class="page-link">{{ page }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    {% if current_page < total_pages %}
+    <a href="{{ base_url }}?page={{ current_page + 1 }}" class="page-link">Next &raquo;</a>
+    {% endif %}
+</nav>
+{% endmacro %}
+
+{# Macro for form input #}
+{% macro form_input(name, label, type='text', value='', required=false, placeholder='') %}
+<div class="form-group">
+    <label for="{{ name }}">{{ label }}{% if required %} <span class="required">*</span>{% endif %}</label>
+    <input 
+        type="{{ type }}" 
+        id="{{ name }}" 
+        name="{{ name }}" 
+        value="{{ value }}"
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if required %}required{% endif %}
+        class="form-control"
+    >
+</div>
+{% endmacro %}
+
+{# Macro for status badge #}
+{% macro status_badge(status) %}
+{% if status == 'active' %}
+<span class="badge badge-success">Active</span>
+{% elif status == 'pending' %}
+<span class="badge badge-warning">Pending</span>
+{% elif status == 'inactive' %}
+<span class="badge badge-secondary">Inactive</span>
+{% else %}
+<span class="badge">{{ status|title }}</span>
+{% endif %}
+{% endmacro %}
+
+{# Macro for icon #}
+{% macro icon(name, size='16') %}
+<svg class="icon icon-{{ name }}" width="{{ size }}" height="{{ size }}">
+    <use xlink:href="#icon-{{ name }}"></use>
+</svg>
+{% endmacro %}

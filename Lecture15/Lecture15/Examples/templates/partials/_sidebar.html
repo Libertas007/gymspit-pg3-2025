@@ -1,0 +1,160 @@
+{# Sidebar partial - included in pages that need a sidebar #}
+<aside class="sidebar">
+    <div class="sidebar-section">
+        <h3>Navigation</h3>
+        <ul class="sidebar-nav">
+            {% for item in navigation %}
+            <li>
+                <a href="{{ item.url }}" {% if item.active %}class="active"{% endif %}>
+                    {{ item.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    {% if user.is_authenticated %}
+    <div class="sidebar-section">
+        <h3>User Menu</h3>
+        <div class="user-info">
+            <img src="{{ user.avatar_url|default('/static/images/default-avatar.png') }}" 
+                 alt="{{ user.name }}" 
+                 class="avatar">
+            <div class="user-details">
+                <strong>{{ user.name }}</strong>
+                <span class="role">{{ user.role|title }}</span>
+            </div>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/settings">Settings</a></li>
+            {% if 'admin' in user.role %}
+            <li><a href="/admin">Admin Panel</a></li>
+            {% endif %}
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if categories %}
+    <div class="sidebar-section">
+        <h3>Categories</h3>
+        <ul class="sidebar-nav">
+            {% for category in categories %}
+            <li>
+                <a href="/products?category={{ category|urlencode }}">
+                    {{ category }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <div class="sidebar-section">
+        <h3>Quick Stats</h3>
+        <ul class="stats-list">
+            <li>
+                <span class="stat-label">Products</span>
+                <span class="stat-value">{{ stats.total_products|default(0) }}</span>
+            </li>
+            <li>
+                <span class="stat-label">Users</span>
+                <span class="stat-value">{{ stats.total_users|default(0) }}</span>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+<style>
+    .sidebar {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+    }
+    
+    .sidebar-section {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .sidebar-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .sidebar-section h3 {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+    }
+    
+    .sidebar-nav {
+        list-style: none;
+    }
+    
+    .sidebar-nav li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-nav a {
+        color: #666;
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        background-color: var(--light-bg);
+        color: var(--primary-color);
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .user-info .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    
+    .user-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .user-details .role {
+        font-size: 0.85rem;
+        color: #666;
+    }
+    
+    .stats-list {
+        list-style: none;
+    }
+    
+    .stats-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .stats-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .stats-list .stat-value {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+</style>
