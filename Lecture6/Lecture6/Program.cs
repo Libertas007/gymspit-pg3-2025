@@ -1,10 +1,13 @@
-﻿namespace Lecture6
+﻿using System.Text;
+
+namespace Lecture6
 {
     class Program
     {
         public static void Main(string[] args)
         {
             Console.WriteLine("== Minesweeper ==");
+            Console.OutputEncoding = Encoding.UTF8;
             Game game = new Game();
         }
     }
@@ -73,7 +76,7 @@ Watch out and don't dig the mine!
             {
                 Console.SetCursorPosition(consoleCursorPos.Item1, consoleCursorPos.Item2 - 1);
 
-                Console.WriteLine($"Mines marked {markedMines} / {mineCount}");
+                Console.WriteLine($"Mines marked {markedMines} / {mineCount}  ");
             }
 
             bool isCursorHere = cursorX == x && cursorY == y;
@@ -82,10 +85,10 @@ Watch out and don't dig the mine!
 
             if (game[x, y] == -1 && visible[x, y] == 1)
             {
-                Console.BackgroundColor = ConsoleColor.DarkRed;
-                Console.ForegroundColor = ConsoleColor.White;
+                //Console.BackgroundColor = ConsoleColor.DarkRed;
+                Console.ForegroundColor = ConsoleColor.Red;
 
-                Console.Write("[ B ]");
+                Console.Write("  *  ");
             }
             else if (visible[x, y] == 1)
             {
@@ -104,7 +107,7 @@ Watch out and don't dig the mine!
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.Magenta;
-                Console.Write($"{(isCursorHere ? '(' : ' ')} F {(isCursorHere ? ')' : ' ')}");
+                Console.Write($"{(isCursorHere ? '(' : ' ')} ⚐ {(isCursorHere ? ')' : ' ')}");
             }
             else
             {
@@ -171,9 +174,9 @@ Watch out and don't dig the mine!
             return value <= max && value >= min;
         }
 
-        private void UncoverMine(int x, int y)
+        private void UncoverMine(int x, int y, bool bypass = false)
         {
-            if (visible[x, y] != 0) return;
+            if (visible[x, y] != 0 && !bypass) return;
 
             if (!gameGenerated)
             {
@@ -188,11 +191,11 @@ Watch out and don't dig the mine!
                 EndGame();
             }
 
-            if (game[x, y] == 0)
+            if (game[x, y] == 0 || (game[x, y] == NeigboursOf(x, y).Count(g => visible[g.Item1, g.Item2] == 2) && bypass))
             {
                 foreach (var neighbour in NeigboursOf(x, y))
                 {
-                    UncoverMine(neighbour.Item1, neighbour.Item2);
+                    UncoverMine(neighbour.Item1, neighbour.Item2, false);
                 }
             }
         }
@@ -319,7 +322,7 @@ Watch out and don't dig the mine!
                     cursorY = Math.Clamp(cursorY + 1, 0, gameSize - 1);
                     break;
                 case ConsoleKey.Enter:
-                    UncoverMine(cursorX, cursorY);
+                    UncoverMine(cursorX, cursorY, bypass: true);
                     break;
                 case ConsoleKey.Escape:
                     EndGame();
