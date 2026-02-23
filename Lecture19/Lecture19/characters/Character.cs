@@ -17,7 +17,7 @@
         Killed,
     }
 
-    internal abstract class Character
+    public abstract class Character
     {
         private string name;
         private int health;
@@ -27,7 +27,7 @@
         private double accuracy;
         private double criticalChance;
         private int attackBonus = 0;
-        private int defenseBonus = 0;
+        private int armorBonus = 0;
         private string color;
 
         public string Name => name;
@@ -39,7 +39,7 @@
         public double Accuracy => accuracy;
         public double CriticalChance => criticalChance;
         public int AttackBonus => attackBonus;
-        public int DefenseBonus => defenseBonus;
+        public int ArmorBonus => armorBonus;
         public string Color => color;
 
         public Character(string name, int maxHealth, int attack, int defense, double accuracy, double criticalChance, string color)
@@ -55,25 +55,25 @@
             Reset();
         }
 
-        protected abstract TurnChoice ChooseAction();
-        protected abstract Character ChooseEnemy(List<Character> enemies);
+        protected abstract TurnChoice ChooseAction(Output output, Game game);
+        protected abstract Character ChooseEnemy(Output output, Game game);
 
 
         public void Reset()
         {
             health = maxHealth;
             attackBonus = 0;
-            defenseBonus = 0;
+            armorBonus = 0;
         }
 
         public void TakeTurn(Output output, Game game)
         {
-            TurnChoice choice = ChooseAction();
-            Character enemy = ChooseEnemy(game.characters.Where(c => c.Name != name).ToList());
+            TurnChoice choice = ChooseAction(output, game);
 
             switch (choice)
             {
                 case TurnChoice.Attack:
+                    Character enemy = ChooseEnemy(output, game);
                     AttackEnemy(output, game, enemy);
                     break;
                 case TurnChoice.Defend:
@@ -82,7 +82,6 @@
                 case TurnChoice.Heal:
                     Heal(output, game);
                     break;
-
             }
         }
 
@@ -121,15 +120,15 @@
 
         private AttackResult RecieveAttack(Output output, Game game, int attackStrength, bool missed, bool critical)
         {
-            int defenseStrength = game.sixDie.Roll() + defense + defenseBonus;
-            int damage = game.sixDie.Roll() - attackStrength * (critical ? 2 : 1);
+            int defenseStrength = game.sixDie.Roll() + defense + armorBonus;
+            int damage = defenseStrength - attackStrength * (critical ? 2 : 1);
 
             if (missed) return AttackResult.Missed;
 
             if (damage > 0)
             {
                 health -= damage;
-                defenseBonus -= 1;
+                armorBonus = Math.Max(0, armorBonus - damage);
 
                 if (health < 0)
                     return AttackResult.Killed;
@@ -138,19 +137,23 @@
                 else return AttackResult.Hit;
             } else
             {
-                defenseBonus += 1;
+                armorBonus += 1;
                 return AttackResult.Defended;
             }
         }
 
         private void Defend(Output output)
         {
-            defenseBonus += 1;
+            armorBonus += 1;
+            output.Log($"[{color}]{name}[/] has decided to prepare for fights and reinforce their armour.");
         }
 
         private void Heal(Output output, Game game)
         {
-            health = Math.Min(maxHealth, health + game.sixDie.Roll());
+            int newHealth = Math.Min(maxHealth, health + game.sixDie.Roll());
+            int diff = newHealth - health;
+            health = newHealth;
+            output.Log($"[{color}]{name}[/] has decided to rest for a while and heal [red]{diff}[/] hearts.");
         }
     }
 }

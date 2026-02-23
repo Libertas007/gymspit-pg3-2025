@@ -2,7 +2,7 @@
 
 namespace Lecture19
 {
-    internal class Output
+    public class Output
     {
         private record ChoiceLabel
         {
@@ -25,12 +25,19 @@ namespace Lecture19
             ).Choice;
         }
 
+        public Character PromptForCharacter(string prompt, List<Character> characters)
+        {
+            return AnsiConsole.Prompt(
+                new SelectionPrompt<Character>().Title(prompt).UseConverter(c => c.Name).AddChoices(characters)
+            );
+        }
+
         public void PrintCharacter(Character character)
         {
             var panel = new Panel(
                 new Rows(
-                    new Markup($"[red]{character.Attack}[/] [yellow]+ {character.AttackBonus}[/] / [blue]{character.Defense}[/] [yellow]+ {character.DefenseBonus}[/]"),
-                    new Markup(character.Alive ? "[green]Alive[/]" : "[red]Dead[/]")
+                    new Markup($"[red]{character.Attack}[/] [yellow]+ {character.AttackBonus}[/] / [blue]{character.Defense}[/] [yellow]+ {character.ArmorBonus}[/]"),
+                    new Markup(character.Alive ? $"[green]Alive[/] ([red]{character.Health}[/]/{character.MaxHealth})" : "[red]Dead[/]")
                 )
             )
                 .Header($"[bold]{character.Name}[/]")
@@ -42,7 +49,7 @@ namespace Lecture19
 
         public void Log(string message)
         {
-            AnsiConsole.Markup(message);
+            AnsiConsole.Markup(message + "\n");
         } 
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Lecture19
 {
-    internal class Die
+    public class Die
     {
         Random random;
 
