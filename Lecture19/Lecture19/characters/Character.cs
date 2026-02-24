@@ -90,7 +90,7 @@
         private void AttackEnemy(Output output, Game game, Character enemy)
         {
             int attackStrength = game.sixDie.Roll() + attack + attackBonus;
-            bool missed = game.random.NextDouble() > accuracy;
+            bool missed = game.random.NextDouble() < Math.Pow(1 - accuracy, 2);
             bool critical = game.random.NextDouble() < criticalChance;
 
             int startHealth = enemy.health;

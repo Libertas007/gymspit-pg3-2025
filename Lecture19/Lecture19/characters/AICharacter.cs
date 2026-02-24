@@ -28,11 +28,12 @@ public class AICharacter : Character
 
         double defendFactor = Math.Sin(2 * healthPercentage) * (1 - healthPercentage * aggresivity);
         
-        Dictionary<double, TurnChoice> dictionary = new Dictionary<double, TurnChoice>();
-        
-        dictionary.Add(healFactor, TurnChoice.Heal);
-        dictionary.Add(attackFactor, TurnChoice.Attack);
-        dictionary.Add(defendFactor, TurnChoice.Defend);
+        Dictionary<double, TurnChoice> dictionary = new Dictionary<double, TurnChoice>
+        {
+            { healFactor, TurnChoice.Heal },
+            { attackFactor, TurnChoice.Attack },
+            { defendFactor, TurnChoice.Defend }
+        };
 
         double[] values = [healFactor, attackFactor, defendFactor];
         
@@ -41,22 +42,6 @@ public class AICharacter : Character
 
     protected override Character ChooseEnemy(Output output, Game game)
     {
-        double min = 1.0;
-        Character chosen = game.characters.First(c => c.Name != Name);
-        
-        foreach (var character in game.characters)
-        {
-            if (character.Name == Name) continue;
-            
-            double healthPercentage = (double) character.Health / character.MaxHealth;
-
-            if (healthPercentage < min)
-            {
-                min = healthPercentage;
-                chosen = character;
-            }
-        }
-
-        return chosen;
+        return game.PickWeighted(game.characters.Where(c => c.Alive && c.Name != Name), c => 5 + (int) Math.Round(3.0 * (1.0 - 1.0 * c.Health / c.MaxHealth)));
     }
 }

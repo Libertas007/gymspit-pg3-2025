@@ -34,6 +34,15 @@ namespace Lecture19
             );
         }
 
+        public void PrintCharacters(List<Character> characters)
+        {
+            var panels = characters.Select(GetCharacterPanel).ToArray();
+            
+            AnsiConsole.Write(new Columns(panels));
+            
+            AnsiConsole.WriteLine();
+        }
+
         public void PrintCharacter(Character character)
         {
             var panel = GetCharacterPanel(character);
@@ -50,8 +59,9 @@ namespace Lecture19
                         new Markup(character.Alive ? $"[green]Alive[/] ([red]{character.Health}[/]/{character.MaxHealth})" : "[red]Dead[/]")
                     )
                 )
-                .Header($"[bold]{character.Name}[/]")
-                .Border(BoxBorder.Square);
+                .Header($"[{character.Color}][bold]{character.Name}[/][/]")
+                .Border(BoxBorder.Square)
+                .Expand();
             return panel;
         }
 
@@ -71,11 +81,7 @@ namespace Lecture19
         {
             AnsiConsole.Clear();
             
-            var panels = game.characters.Select(GetCharacterPanel).ToArray();
-            
-            AnsiConsole.Write(new Columns(panels));
-            
-            AnsiConsole.WriteLine();
+            PrintCharacters(game.characters);
 
             foreach (var message in log)
             {

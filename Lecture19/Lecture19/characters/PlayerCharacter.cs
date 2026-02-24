@@ -13,6 +13,6 @@ public class PlayerCharacter : Character
 
     protected override Character ChooseEnemy(Output output, Game game)
     {
-        return output.PromptForCharacter("Please, select a target.", game.characters.Where(c => c.Name != Name).ToList());
+        return output.PromptForCharacter("Please, select a target.", game.characters.Where(c => c.Name != Name && c.Alive).ToList());
     }
 }
