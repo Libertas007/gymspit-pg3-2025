@@ -21,13 +21,13 @@
         {
             for (int i = 0; i < characters.Count; i = (i + 1) % characters.Count)
             {
-                if (i == 0)
+                /*if (i == 0)
                 {
                     foreach (var c in characters)
                     {
                         output.PrintCharacter(c);  
                     }
-                }
+                }*/
                 
                 Character character = characters[i];
 
@@ -36,16 +36,19 @@
                     Character winner = characters.First(c => c.Alive);
                     
                     output.Log($"Congratulations! [{winner.Color}]{winner.Name}[/] is the winner!");
+                    output.PrintGameState(this);
                     break;
                 }
                 
                 if (character.Alive)
                 {
                     output.Log($"It's [{character.Color}]{character.Name}[/]'s turn.");
+                    output.PrintGameState(this);
                     character.TakeTurn(output, this);
                 } else
                 {
                     output.Log($"[{character.Color}]{character.Name}[/] cannot play as they are dead.");
+                    output.PrintGameState(this);
                 }
             }
         }

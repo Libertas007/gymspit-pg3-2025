@@ -11,22 +11,32 @@ public class AICharacter : Character
 
     protected override TurnChoice ChooseAction(Output output, Game game)
     {
-        if ((double)Health / MaxHealth <= 0.25)
-        {
-            return TurnChoice.Heal;
-        }
+        Thread.Sleep(400);
+        double healthPercentage = (double)Health / MaxHealth;
         
+        double healFactor = Math.Min(1.2 * Math.Pow(1 - healthPercentage, 3), 1.0);
+
+        double attackFactor = 0.0;
+
         foreach (var character in game.characters)
         {
-            double healthPercentage = (double) character.Health / character.MaxHealth;
+            if (!character.Alive) continue;
+            double characterHealth = (double) character.Health / character.MaxHealth;
 
-            if (healthPercentage < aggresivity || game.sixDie.Roll() > 3)
-            {
-                return TurnChoice.Attack;
-            }
+            attackFactor = Math.Max(attackFactor, 1 - Math.Pow(characterHealth, 2) * Math.Sqrt(1 - aggresivity));
         }
 
-        return TurnChoice.Defend;
+        double defendFactor = Math.Sin(2 * healthPercentage) * (1 - healthPercentage * aggresivity);
+        
+        Dictionary<double, TurnChoice> dictionary = new Dictionary<double, TurnChoice>();
+        
+        dictionary.Add(healFactor, TurnChoice.Heal);
+        dictionary.Add(attackFactor, TurnChoice.Attack);
+        dictionary.Add(defendFactor, TurnChoice.Defend);
+
+        double[] values = [healFactor, attackFactor, defendFactor];
+        
+        return dictionary[values.Max()];
     }
 
     protected override Character ChooseEnemy(Output output, Game game)

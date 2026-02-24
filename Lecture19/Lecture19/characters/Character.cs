@@ -29,6 +29,7 @@
         private int attackBonus = 0;
         private int armorBonus = 0;
         private string color;
+        private int maxBonus;
 
         public string Name => name;
         public int Health => health;
@@ -52,6 +53,7 @@
             this.criticalChance = criticalChance;
             this.color = color;
             this.color = color;
+            maxBonus = maxHealth / 2;
             Reset();
         }
 
@@ -91,21 +93,25 @@
             bool missed = game.random.NextDouble() > accuracy;
             bool critical = game.random.NextDouble() < criticalChance;
 
+            int startHealth = enemy.health;
+
             var result = enemy.RecieveAttack(output, game, attackStrength, missed, critical);
+
+            int diff = startHealth - enemy.health;
 
             switch (result)
             {
                 case AttackResult.Hit:
-                    attackBonus += 1;
-                    output.Log($"[{color}]{name}[/] has hit [{enemy.color}]{enemy.name}[/]!");
+                    attackBonus = Math.Min(maxBonus, attackBonus + 1);
+                    output.Log($"[{color}]{name}[/] has hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.CriticalHit:
-                    attackBonus += 1;
-                    output.Log($"[{color}]{name}[/] has critically hit [{enemy.color}]{enemy.name}[/]!");
+                    attackBonus = Math.Min(maxBonus, attackBonus + 1);
+                    output.Log($"[{color}]{name}[/] has critically hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.Killed:
-                    attackBonus += 1;
-                    output.Log($"[{color}]{name}[/] has killed [{enemy.color}]{enemy.name}[/]!");
+                    attackBonus = Math.Min(maxBonus, attackBonus + 1);
+                    output.Log($"[{color}]{name}[/] has killed [{enemy.color}]{enemy.name}[/] by dealing [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.Missed:
                     attackBonus = 0;
@@ -137,14 +143,14 @@
                 else return AttackResult.Hit;
             } else
             {
-                armorBonus += 1;
+                armorBonus = Math.Min(maxBonus, armorBonus + 1);
                 return AttackResult.Defended;
             }
         }
 
         private void Defend(Output output)
         {
-            armorBonus += 1;
+            armorBonus = Math.Min(maxBonus, armorBonus + 1);
             output.Log($"[{color}]{name}[/] has decided to prepare for fights and reinforce their armour.");
         }
 
