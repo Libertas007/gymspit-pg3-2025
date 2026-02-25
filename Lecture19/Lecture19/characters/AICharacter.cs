@@ -11,7 +11,7 @@ public class AICharacter : Character
 
     protected override TurnChoice ChooseAction(Output output, Game game)
     {
-        Thread.Sleep(400);
+        Thread.Sleep(400 + game.random.Next(-100, 300));
         double healthPercentage = (double)Health / MaxHealth;
         
         double healFactor = Math.Min(1.2 * Math.Pow(1 - healthPercentage, 3), 1.0);

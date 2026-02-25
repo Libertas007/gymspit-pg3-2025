@@ -103,15 +103,15 @@
             {
                 case AttackResult.Hit:
                     attackBonus = Math.Min(maxBonus, attackBonus + 1);
-                    output.Log($"[{color}]{name}[/] has hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
+                    output.Log((attackBonus > 1 ? $"[bold]Combo x{attackBonus}![/] " : "") + $"[{color}]{name}[/] has hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.CriticalHit:
                     attackBonus = Math.Min(maxBonus, attackBonus + 1);
-                    output.Log($"[{color}]{name}[/] has critically hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
+                    output.Log((attackBonus > 1 ? $"[bold]Combo x{attackBonus}![/] " : "") + $"[{color}]{name}[/] has critically hit [{enemy.color}]{enemy.name}[/] and dealt [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.Killed:
                     attackBonus = Math.Min(maxBonus, attackBonus + 1);
-                    output.Log($"[{color}]{name}[/] has killed [{enemy.color}]{enemy.name}[/] by dealing [red]{diff}[/] hearts of damage!");
+                    output.Log((attackBonus > 1 ? $"[bold]Combo x{attackBonus}![/] " : "") + $"[{color}]{name}[/] has killed [{enemy.color}]{enemy.name}[/] by dealing [red]{diff}[/] hearts of damage!");
                     break;
                 case AttackResult.Missed:
                     attackBonus = 0;

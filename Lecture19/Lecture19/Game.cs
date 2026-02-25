@@ -74,7 +74,7 @@
                     characters.Add(chosen);
             }
 
-            return characters;
+            return characters.Shuffle().ToList();
         }
 
         public void Play()
@@ -99,17 +99,13 @@
                     output.PrintGameState(this);
                     break;
                 }
+
+                if (!character.Alive) continue;
                 
-                if (character.Alive)
-                {
-                    output.Log($"It's [{character.Color}]{character.Name}[/]'s turn.");
-                    output.PrintGameState(this);
-                    character.TakeTurn(output, this);
-                } else
-                {
-                    output.Log($"[{character.Color}]{character.Name}[/] cannot play as they are dead.");
-                    output.PrintGameState(this);
-                }
+                output.Log($"It's [{character.Color}]{character.Name}[/]'s turn.");
+                output.PrintGameState(this);
+                Thread.Sleep(100);
+                character.TakeTurn(output, this);
             }
         }
         
